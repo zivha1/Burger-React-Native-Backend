@@ -1,5 +1,4 @@
 import mongoose, { Schema, SchemaType } from "mongoose";
-import { timeStamp } from "node:console";
 
 const orderSchema = new mongoose.Schema({
   items: { type: Schema.Types.ObjectId, ref: "Product", required: true },
