@@ -1,5 +1,5 @@
 import express from "express";
-import connectDB from "./src/config/db";
+import connectDB from "./config/db";
 
 const app = express();
 const PORT = 3001;
