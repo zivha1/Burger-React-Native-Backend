@@ -1,14 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  userId: {
-    type: String,
-  },
   password: {
     type: String,
     required: true,
@@ -31,4 +23,4 @@ userSchema.virtual("orders", {
   foreignField: "user",
 });
 
-export const user = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);
