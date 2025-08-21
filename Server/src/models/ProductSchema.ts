@@ -1,16 +1,17 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+
+interface IProduct extends Document {
+  _id: mongoose.Types.ObjectId;
+  title: string;
+  price: number;
+  image?: string;
+}
 
 const productSchema = new mongoose.Schema({
-  title: String,
-  id: Number,
-  price: Number,
-  image: Image,
+  title: { type: String, required: true, unique: true },
+  price: { type: Number, required: true },
+  image: { type: String, required: false },
 });
 
-productSchema.virtual("orders", {
-  ref: "Order",
-  localField: "_id",
-  foreignField: "items.product",
-});
-
-export const product = mongoose.model("Product", productSchema);
+const Product = mongoose.model<IProduct>("Product", productSchema);
+export default Product;
