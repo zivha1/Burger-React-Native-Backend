@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
 import { useAuth } from "@/context/authContext";
 import { registerSchema, RegisterFormData } from "@/schemas/auth.schema";
+import { RegisterScreenProps } from "@/types/navigation";
 
-export const RegisterScreen = ({ navigation }: any) => {
+export const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
   const { register } = useAuth();
   const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
@@ -45,9 +46,7 @@ export const RegisterScreen = ({ navigation }: any) => {
       });
 
       if (result.success) {
-        Alert.alert("Success", "Registration successful!", [
-          { text: "OK", onPress: () => navigation.navigate("Home") },
-        ]);
+        Alert.alert("Success", "Registration successful!");
       } else {
         // Display the specific backend error message
         Alert.alert("Error", result.error || "Registration failed. Please try again.");

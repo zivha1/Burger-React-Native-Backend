@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useAuth } from "@/context/authContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export const ProfileScreen = () => {
   const { user, logout } = useAuth();
@@ -20,7 +21,10 @@ export const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome!</Text>
+      <Text style={styles.title}>
+        <Ionicons name="person" size={24} />
+        Profile Page
+      </Text>
 
       <View style={styles.userInfo}>
         <Text style={styles.label}>Name:</Text>

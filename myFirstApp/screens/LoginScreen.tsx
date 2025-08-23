@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
 import { useAuth } from "@/context/authContext";
 import { loginSchema, LoginFormData } from "@/schemas/auth.schema";
+import { LoginScreenProps } from "@/types/navigation";
 
-export const LoginScreen = ({ navigation }: any) => {
+export const LoginScreen = ({ navigation }: LoginScreenProps) => {
   const { login } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "test@gmail.com",
@@ -39,9 +40,7 @@ export const LoginScreen = ({ navigation }: any) => {
       const result = await login(formData);
 
       if (result.success) {
-        Alert.alert('Success', 'Login successful!', [
-          { text: 'OK', onPress: () => navigation.navigate('Home') }
-        ]);
+        Alert.alert('Success', 'Login successful!');
       } else {
         // Display the specific backend error message
         Alert.alert('Error', result.error || 'Invalid credentials. Please try again.');
