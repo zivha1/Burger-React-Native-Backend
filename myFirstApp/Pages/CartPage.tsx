@@ -1,19 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 
-import {
-  View,
-  Pressable,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-} from "react-native";
-import { RootTypeParamsList } from "@/App";
+import { View, Pressable, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { AppStackParamList } from "@/types/navigation";
 import ProductCard from "../components/ProductCard";
 import { registerRootComponent } from "expo";
 
-type CartProp = NativeStackNavigationProp<RootTypeParamsList, "Cart">;
+type CartProp = NativeStackNavigationProp<AppStackParamList, "Cart">;
 
 export default function CartPage({ navigation }: { navigation: CartProp }) {
   return (
