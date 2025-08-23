@@ -23,9 +23,9 @@ export const RootNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
-        <Stack.Screen name="App" component={AppNavigator} />
+        <Stack.Screen name="MainApp" component={AppNavigator} />
       ) : (
-        <Stack.Screen name="Auth" component={AuthNavigator} />
+        <Stack.Screen name="AuthStack" component={AuthNavigator} />
       )}
     </Stack.Navigator>
   );

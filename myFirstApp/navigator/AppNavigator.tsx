@@ -39,7 +39,7 @@ export const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="profile"
+        name="Profile"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => {
