@@ -1,19 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 
-import {
-  View,
-  Pressable,
-  Button,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  FlatList,
-} from "react-native";
-import { RootTypeParamsList } from "@/App";
+import { View, Pressable, Button, Text, StyleSheet, Image, ScrollView, FlatList } from "react-native";
 import ProductCard from "../components/ProductCard";
 import { registerRootComponent } from "expo";
+import { AppStackParamList } from "@/types/navigation";
 
 const burgers = [
   {
@@ -78,7 +69,7 @@ const burgers = [
   },
 ];
 
-type MenuProp = NativeStackNavigationProp<RootTypeParamsList, "Menu">;
+type MenuProp = NativeStackNavigationProp<AppStackParamList, "Menu">;
 
 export default function MenuPage({ navigation }: { navigation: MenuProp }) {
   return (
@@ -91,11 +82,7 @@ export default function MenuPage({ navigation }: { navigation: MenuProp }) {
           ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
           renderItem={({ item }) => (
             <View style={styles.card}>
-              <Image
-                source={{ uri: item.img }}
-                style={styles.img}
-                resizeMode="cover"
-              />
+              <Image source={{ uri: item.img }} style={styles.img} resizeMode="cover" />
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.price}>${item.price}</Text>
               <Pressable>
