@@ -6,8 +6,8 @@ import { loginSchema, LoginFormData } from "@/schemas/auth.schema";
 export const LoginScreen = ({ navigation }: any) => {
   const { login } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
+    email: "test@gmail.com",
+    password: "12345678",
   });
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const [loading, setLoading] = useState(false);
