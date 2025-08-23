@@ -1,4 +1,3 @@
-// screens/ProductScreen.tsx
 import React, { useState } from "react";
 import {
   View,
@@ -186,6 +185,7 @@ export const ProductScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 50,
     backgroundColor: "#F8F9FA",
   },
   header: {
