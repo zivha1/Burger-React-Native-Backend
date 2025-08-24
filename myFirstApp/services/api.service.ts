@@ -1,8 +1,10 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const SERVER_IP = process.env.EXPO_PUBLIC_SERVER_IP!;
+
 export const api = axios.create({
-  baseURL: "http://10.100.102.11:3001/api",
+  baseURL: `http://${SERVER_IP}:3001/api`,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

@@ -102,5 +102,15 @@ export const ProductController = {
         error,
       });
     }
-  }
+  },
+
+  //GET:id get by id
+  getProductById: async (req: Request, res: Response) => {
+    const _id = req.params.id;
+    const product = await ProductModel.findById({ _id });
+    res.status(202).json({ message: "Product found:", product });
+    if (!product) {
+      res.status(404).json({ message: "Product not found" });
+    }
+  },
 };
