@@ -12,6 +12,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(async (config: any) => {
+  //TODO:change type
   const token = await AsyncStorage.getItem("authToken");
   if (token && config.headers) {
     config.headers.authorization = `Bearer ${token}`;
