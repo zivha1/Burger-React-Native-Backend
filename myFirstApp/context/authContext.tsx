@@ -8,6 +8,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   login: (credentials: LoginRequest) => Promise<{ success: boolean; error?: string }>;
   register: (credentials: RegisterRequest) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -24,6 +25,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   const isAuthenticated = !!user;
+  console.log(user?.role);
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
     initializeAuth();
@@ -50,15 +53,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (credentials: LoginRequest): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await authService.login(credentials);
-      
+
       if (response.success) {
         const { token, user: userData } = response.data;
-        
+
         await Promise.all([
           AsyncStorage.setItem("authToken", token),
           AsyncStorage.setItem("user", JSON.stringify(userData)),
         ]);
-        
+
         setUser(userData);
         return { success: true };
       }
@@ -79,15 +82,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const register = async (credentials: RegisterRequest): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await authService.register(credentials);
-      
+
       if (response.success) {
         const { token, user: userData } = response.data;
-        
+
         await Promise.all([
           AsyncStorage.setItem("authToken", token),
           AsyncStorage.setItem("user", JSON.stringify(userData)),
         ]);
-        
+
         setUser(userData);
         return { success: true };
       }
@@ -107,10 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = async (): Promise<void> => {
     try {
-      await Promise.all([
-        AsyncStorage.removeItem("authToken"),
-        AsyncStorage.removeItem("user"),
-      ]);
+      await Promise.all([AsyncStorage.removeItem("authToken"), AsyncStorage.removeItem("user")]);
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
@@ -121,6 +121,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     loading,
     isAuthenticated,
+    isAdmin,
     login,
     register,
     logout,
