@@ -18,13 +18,13 @@ export const generateToken = (payload: JWTPayload, opts?: SignOptions): string =
   return jwt.sign(payload, JWT_SECRET, options);
 };
 
-export const verifyToken = (token: string): JwtPayload => {
+export const verifyToken = (token: string): JWTPayload => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     if (typeof decoded === "string") {
       throw new Error("Invalid token format");
     }
-    return decoded as JwtPayload;
+    return decoded as JWTPayload;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Token verification failed: ${error.message}`);

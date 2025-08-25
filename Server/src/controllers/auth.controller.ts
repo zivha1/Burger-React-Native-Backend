@@ -36,6 +36,7 @@ export const AuthController = {
         id: newUser._id.toString(),
         email: newUser.email,
         name: newUser.name,
+        role: newUser.role,
       });
 
       const response = {
@@ -46,6 +47,7 @@ export const AuthController = {
             _id: newUser._id.toString(),
             name: newUser.name,
             email: newUser.email,
+            role: newUser.role,
           },
           token,
         },
@@ -93,6 +95,7 @@ export const AuthController = {
         id: user._id.toString(),
         email: user.email,
         name: user.name,
+        role: user.role,
       });
 
       const response = {
@@ -103,6 +106,7 @@ export const AuthController = {
             _id: user._id.toString(),
             name: user.name,
             email: user.email,
+            role: user.role,
           },
           token,
         },
