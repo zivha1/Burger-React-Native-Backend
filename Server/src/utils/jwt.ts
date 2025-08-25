@@ -1,19 +1,16 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-const JWT_EXPIRE = (process.env.JWT_EXPIRE ||
-  "1d") as jwt.SignOptions["expiresIn"];
+const JWT_EXPIRE = (process.env.JWT_EXPIRE || "1d") as jwt.SignOptions["expiresIn"];
 
 export interface JWTPayload extends JwtPayload {
   id: string;
   email: string;
   name: string;
+  role: "admin" | "customer";
 }
 
-export const generateToken = (
-  payload: JWTPayload,
-  opts?: SignOptions
-): string => {
+export const generateToken = (payload: JWTPayload, opts?: SignOptions): string => {
   const options: SignOptions = {
     expiresIn: JWT_EXPIRE,
     ...opts,
