@@ -30,7 +30,13 @@ export const AppNavigator = () => {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <Ionicons name="home" size={24} color={focused ? "black" : "gray"} />;
+            return (
+              <Ionicons
+                name="home"
+                size={24}
+                color={focused ? "black" : "gray"}
+              />
+            );
           },
         }}
       />
@@ -39,7 +45,13 @@ export const AppNavigator = () => {
         component={ProductScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <Ionicons name="list" size={24} color={focused ? "black" : "gray"} />;
+            return (
+              <Ionicons
+                name="list"
+                size={24}
+                color={focused ? "black" : "gray"}
+              />
+            );
           },
         }}
       />
@@ -48,7 +60,13 @@ export const AppNavigator = () => {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <Ionicons name="person-circle-sharp" size={24} color={focused ? "black" : "gray"} />;
+            return (
+              <Ionicons
+                name="person-circle-sharp"
+                size={24}
+                color={focused ? "black" : "gray"}
+              />
+            );
           },
         }}
       />
@@ -58,7 +76,13 @@ export const AppNavigator = () => {
         component={CartScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <Ionicons name="cart" size={24} color={focused ? "black" : "gray"} />;
+            return (
+              <Ionicons
+                name="cart"
+                size={24}
+                color={focused ? "black" : "gray"}
+              />
+            );
           },
         }}
       />
@@ -68,7 +92,13 @@ export const AppNavigator = () => {
           component={AdminMenuScreen}
           options={{
             tabBarIcon: ({ focused }) => {
-              return <Ionicons name="menu" size={24} color={focused ? "red" : "red"} />;
+              return (
+                <Ionicons
+                  name="menu"
+                  size={24}
+                  color={focused ? "red" : "red"}
+                />
+              );
             },
           }}
         />

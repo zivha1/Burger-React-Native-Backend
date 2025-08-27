@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -8,141 +8,109 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types/product";
+import { useAddProduct } from "@/hooks/useOrder";
+import { useDecreaseProduct, useOrder } from "@/hooks/useOrder";
+import { useAuth } from "@/context/authContext";
+import { Button } from "@react-navigation/elements";
+import { OrderItem } from "@/types/order";
 
 interface ProductModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (product: Omit<Product, "_id">) => void;
-  product?: Product | null;
-  mode: "add" | "update";
+  product: Product;
 }
 
 export const ProductModal: React.FC<ProductModalProps> = ({
   visible,
   onClose,
-  onSubmit,
   product,
-  mode,
 }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    price: "",
-    image: "",
-    isAvailable: true,
+  const [productData, setProductData] = useState({
+    title: product.title,
+    price: product.price.toString(),
+    image: product.image,
+    isAvailable: product.isAvailable,
   });
 
-  useEffect(() => {
-    if (product && mode === "update") {
-      setFormData({
-        title: product.title,
-        price: product.price.toString(),
-        image: product.image || "",
-        isAvailable: product.isAvailable || true,
-      });
-    } else {
-      setFormData({
-        title: "",
-        price: "",
-        image: "",
-        isAvailable: true,
-      });
-    }
-  }, [product, mode, visible]);
+  const { user } = useAuth();
+  const { data: order } = useOrder(user!._id);
 
-  const handleSubmit = () => {
-    if (!formData.title || !formData.price || !formData.image) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-
-    const price = parseFloat(formData.price);
-    if (isNaN(price) || price <= 0) {
-      Alert.alert("Error", "Please enter a valid price");
-      return;
-    }
-
-    onSubmit({
-      title: formData.title,
-      price,
-      image: formData.image,
-      isAvailable: formData.isAvailable,
+  const inCart = () => {
+    const res = !order?.items.some((it) => {
+      if (it.product._id === product._id) {
+        return true;
+      }
     });
-
-    if (mode === "add") {
-      setFormData({ title: "", price: "", image: "", isAvailable: true });
-    }
+    return res;
   };
 
-  const isAddMode = mode === "add";
-  const modalTitle = isAddMode ? "Add New Product" : "Update Product";
-  const submitButtonText = isAddMode ? "Add Product" : "Update Product";
+  const quantity = useMemo(() => {
+    const item = order?.items.find((it) => {
+      return it.product._id === product._id;
+    });
+    return item?.quantity ?? 0;
+  }, [order, product._id]);
+
+  const addMutation = useAddProduct(user!._id);
+  const decMutation = useDecreaseProduct(user!._id);
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>{modalTitle}</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color="#333" />
             </TouchableOpacity>
           </View>
-
           <ScrollView style={styles.modalBody}>
-            <Text style={styles.inputLabel}>Product Name</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.title}
-              onChangeText={(text) => setFormData({ ...formData, title: text })}
-              placeholder="Enter product name"
-              placeholderTextColor="#999"
+            <Image
+              source={{ uri: product.image }}
+              style={{ width: 312, height: 270, borderRadius: 7 }}
             />
+            <Text style={styles.inputLabel}>{productData.title}</Text>
 
-            <Text style={styles.inputLabel}>Price ($)</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.price}
-              onChangeText={(text) => setFormData({ ...formData, price: text })}
-              placeholder="Enter price"
-              placeholderTextColor="#999"
-              keyboardType="numeric"
-            />
-
-            <Text style={styles.inputLabel}>Image URL</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.image}
-              onChangeText={(text) => setFormData({ ...formData, image: text })}
-              placeholder="Enter image URL"
-              placeholderTextColor="#999"
-            />
-
-            <TouchableOpacity
-              style={styles.availabilityToggle}
-              onPress={() =>
-                setFormData({ ...formData, isAvailable: !formData.isAvailable })
-              }
-            >
-              <Ionicons
-                name={formData.isAvailable ? "checkmark-circle" : "close-circle"}
-                size={24}
-                color={formData.isAvailable ? "#4CAF50" : "#F44336"}
-              />
-              <Text style={styles.availabilityText}>
-                {formData.isAvailable ? "Available" : "Not Available"}
-              </Text>
-            </TouchableOpacity>
+            <Text style={styles.inputLabel}>{productData.price}$</Text>
           </ScrollView>
 
           <View style={styles.modalFooter}>
+            {product.isAvailable === true ? (
+              inCart() ? (
+                <TouchableOpacity
+                  style={styles.Button}
+                  onPress={() => addMutation.mutate(product._id)}
+                >
+                  <Text style={styles.Button}>add to order </Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.Button}>
+                  <TouchableOpacity
+                    onPress={() => decMutation.mutate(product._id)}
+                  >
+                    <Text style={styles.decreaseBtn}>-</Text>
+                  </TouchableOpacity>
+
+                  <Text style={styles.quantity}> {quantity} </Text>
+
+                  <TouchableOpacity
+                    onPress={() => addMutation.mutate(product._id)}
+                  >
+                    <Text style={styles.decreaseBtn}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            ) : (
+              <TouchableOpacity style={styles.notAvailable} disabled={true}>
+                <Text style={styles.submitButtonText}>Not Available</Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.cancelButtonText}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>{submitButtonText}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -187,6 +155,23 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     padding: 20,
+  },
+  quantity: {
+    padding: 10,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+  },
+  decreaseBtn: {
+    fontSize: 20,
+    width: 40,
+    borderRadius: 7,
+    fontWeight: "bold",
+    borderWidth: 2,
+    textAlign: "center",
+    color: "#fff",
+    borderColor: "#fff",
   },
   inputLabel: {
     fontSize: 16,
@@ -234,6 +219,32 @@ const styles = StyleSheet.create({
     borderColor: "#E9ECEF",
     marginRight: 8,
     alignItems: "center",
+  },
+  Button: {
+    borderRadius: 12,
+    paddingInline: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+    flexDirection: "row",
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#10c200ff",
+    marginRight: 10,
+  },
+  notAvailable: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E9ECEF",
+    marginRight: 8,
+    alignItems: "center",
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "#ff3131ff",
   },
   cancelButtonText: {
     color: "#666",

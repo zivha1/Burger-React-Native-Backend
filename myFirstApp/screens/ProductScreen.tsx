@@ -9,8 +9,14 @@ import {
   ActivityIndicator,
   Image,
   Dimensions,
+  Pressable,
 } from "react-native";
-import { useProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/hooks/useProducts";
+import {
+  useProducts,
+  useCreateProduct,
+  useUpdateProduct,
+  useDeleteProduct,
+} from "@/hooks/useProducts";
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types/product";
 import { ProductModal } from "@/components/modals/ProductModal";
@@ -19,114 +25,44 @@ const { width } = Dimensions.get("window");
 
 export const ProductScreen = () => {
   const { data: products = [], isLoading, isError, refetch } = useProducts();
-  const createProductMutation = useCreateProduct();
-  const updateProductMutation = useUpdateProduct();
-  const deleteProductMutation = useDeleteProduct();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalMode, setModalMode] = useState<"add" | "update">("add");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const handleAddProduct = async (productData: Omit<Product, "_id">) => {
-    try {
-      await createProductMutation.mutateAsync(productData);
-      Alert.alert("Success", "Product added successfully!");
-      refetch(); // Refresh the products list
-    } catch (error) {
-      Alert.alert("Error", "Failed to add product");
-      console.log(error);
-    }
-  };
-
-  const handleUpdateProduct = async (productData: Omit<Product, "_id">) => {
-    if (!selectedProduct) return;
-
-    try {
-      await updateProductMutation.mutateAsync({
-        _id: selectedProduct._id,
-        ...productData,
-      });
-      Alert.alert("Success", "Product updated successfully!");
-      refetch(); // Refresh the products list
-    } catch (error) {
-      Alert.alert("Error", "Failed to update product");
-      console.log(error);
-    }
-  };
-
-  const handleDeleteProduct = async (productId: string) => {
-    Alert.alert("Confirm", "Are you sure you want to delete this product?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await deleteProductMutation.mutateAsync(productId);
-            Alert.alert("Success", "Product deleted successfully!");
-            refetch(); // Refresh the products list
-          } catch (error) {
-            Alert.alert("Error", "Failed to delete product");
-            console.log(error);
-          }
-        },
-      },
-    ]);
-  };
-
-  const openAddModal = () => {
-    setModalMode("add");
-    setSelectedProduct(null);
+  function handleModalPress(product: Product) {
     setModalVisible(true);
-  };
-
-  const openUpdateModal = (product: Product) => {
-    setModalMode("update");
     setSelectedProduct(product);
-    setModalVisible(true);
-  };
+  }
 
   const closeModal = () => {
     setModalVisible(false);
     setSelectedProduct(null);
   };
-
-  const handleModalSubmit = (productData: Omit<Product, "_id">) => {
-    if (modalMode === "add") {
-      handleAddProduct(productData);
-    } else {
-      handleUpdateProduct(productData);
-    }
-    closeModal();
-  };
-
   const renderProductCard = ({ item }: { item: Product }) => (
-    <View style={styles.productCard}>
-      <Image source={{ uri: item.image }} style={styles.productImage} />
-      <View style={styles.productInfo}>
-        <Text style={styles.productTitle}>{item.title}</Text>
-        <Text style={styles.productPrice}>${item.price}</Text>
-        <View style={styles.availabilityContainer}>
-          <Ionicons
-            name={item.isAvailable ? "checkmark-circle" : "close-circle"}
-            size={16}
-            color={item.isAvailable ? "#4CAF50" : "#F44336"}
-          />
-          <Text style={[styles.availabilityText, { color: item.isAvailable ? "#4CAF50" : "#F44336" }]}>
-            {item.isAvailable ? "Available" : "Not Available"}
-          </Text>
+    <Pressable onPress={() => handleModalPress(item)}>
+      <View style={styles.productCard}>
+        <Image source={{ uri: item.image }} style={styles.productImage} />
+        <View style={styles.productInfo}>
+          <Text style={styles.productTitle}>{item.title}</Text>
+          <Text style={styles.productPrice}>${item.price}</Text>
+          <View style={styles.availabilityContainer}>
+            <Ionicons
+              name={item.isAvailable ? "checkmark-circle" : "close-circle"}
+              size={16}
+              color={item.isAvailable ? "#4CAF50" : "#F44336"}
+            />
+            <Text
+              style={[
+                styles.availabilityText,
+                { color: item.isAvailable ? "#4CAF50" : "#F44336" },
+              ]}
+            >
+              {item.isAvailable ? "Available" : "Not Available"}
+            </Text>
+          </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.updateButton} onPress={() => openUpdateModal(item)}>
-        <Ionicons name="create-outline" size={20} color="#007AFF" />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteProduct(item._id)}>
-        <Ionicons name="trash-outline" size={20} color="#F44336" />
-      </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 
   if (isLoading) {
@@ -143,7 +79,9 @@ export const ProductScreen = () => {
       <View style={styles.errorContainer}>
         <Ionicons name="alert-circle-outline" size={64} color="#F44336" />
         <Text style={styles.errorTitle}>Failed to load products</Text>
-        <Text style={styles.errorMessage}>Please check your connection and try again</Text>
+        <Text style={styles.errorMessage}>
+          Please check your connection and try again
+        </Text>
         <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
           <Text style={styles.retryButtonText}>Retry</Text>
         </TouchableOpacity>
@@ -155,10 +93,6 @@ export const ProductScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Our Products</Text>
-        <TouchableOpacity style={styles.addButton} onPress={openAddModal}>
-          <Ionicons name="add" size={24} color="white" />
-          <Text style={styles.addButtonText}>Add Product</Text>
-        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -171,13 +105,13 @@ export const ProductScreen = () => {
         columnWrapperStyle={styles.row}
       />
 
-      <ProductModal
-        visible={modalVisible}
-        onClose={closeModal}
-        onSubmit={handleModalSubmit}
-        product={selectedProduct}
-        mode={modalMode}
-      />
+      {selectedProduct && (
+        <ProductModal
+          visible={modalVisible}
+          onClose={closeModal}
+          product={selectedProduct}
+        />
+      )}
     </View>
   );
 };
