@@ -208,7 +208,7 @@ export default function CartScreen({ navigation }: { navigation: CartProp }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems:"center", backgroundColor: "#F9FAFB", paddingHorizontal: 16 },
+  container: { flex: 1, backgroundColor: "#F9FAFB", paddingHorizontal: 16 },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
