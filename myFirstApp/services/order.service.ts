@@ -3,11 +3,19 @@ import { api } from "./api.service";
 import { Order } from "@/types/order";
 
 export const orderService = {
-  async getUserOrder(userId: string): Promise<Order> {
-    const res = await api.get<{ success: boolean; data: Order }>(
-      `/order/${userId}`
-    );
-    return res.data.data;
+  async getUserOrder(userId: string): Promise<Order | null> {
+    try {
+      if (!userId) {
+        throw new Error("missihn user id");
+      }
+      const res = await api.get<{ success: boolean; data: Order }>(
+        `/order/${userId}`
+      );
+      return res.data.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   },
 
   async addToOrder(productId: string, userId: string): Promise<void> {

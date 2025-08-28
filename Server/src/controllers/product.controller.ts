@@ -19,7 +19,10 @@ export const ProductController = {
   //POST / - creating a product
   create: async (req: Request, res: Response): Promise<void> => {
     try {
-      const { title, price, image, isAvailable } = req.body as Omit<IProduct, "_id">;
+      const { title, price, image, isAvailable } = req.body as Omit<
+        IProduct,
+        "_id"
+      >;
 
       const priceNum = typeof price === "string" ? Number(price) : price;
       if (!title || priceNum === null || Number.isNaN(price) || priceNum < 0) {
@@ -53,7 +56,11 @@ export const ProductController = {
     try {
       const { _id } = req.params;
       const { title, price, image, isAvailable } = req.body as IProduct;
-      const product = await ProductModel.findByIdAndUpdate(_id, { title, price, image, isAvailable }, { new: true });
+      const product = await ProductModel.findByIdAndUpdate(
+        _id,
+        { title, price, image, isAvailable },
+        { new: true }
+      );
       if (!product) {
         res.status(404).json({
           success: false,

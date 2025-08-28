@@ -3,6 +3,7 @@ import UserModel from "../models/UserSchema";
 import ProductModel from "../models/ProductSchema";
 import OrderModel from "../models/OrderSchema";
 import { Request, Response } from "express";
+import Order from "../models/OrderSchema";
 
 export const orderController = {
   addToOrder: async (req: Request, res: Response) => {
@@ -173,7 +174,7 @@ export const orderController = {
     if (!user) {
       return res
         .status(404)
-        .json({ success: false, message: "User order not Found!" });
+        .json({ success: false, message: "User not Found!" });
     }
 
     let order = await OrderModel.findOne({ userId })
@@ -185,7 +186,15 @@ export const orderController = {
       .exec();
 
     if (!order) {
-      res.status(404).json({ success: false, message: "No order found" });
+      order = await OrderModel.create({
+        userId,
+        items: [],
+        totalPrice: 0,
+        totalQuantity: 0,
+      });
+      res
+        .status(200)
+        .json({ success: true, message: "No order found", data: order });
       return;
     }
     // get user order

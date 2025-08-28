@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -47,12 +47,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({
     });
     return res;
   };
+  const [quantity, setQuantity] = useState<number>(1);
 
-  const quantity = useMemo(() => {
+  useEffect(() => {
     const item = order?.items.find((it) => {
       return it.product._id === product._id;
     });
-    return item?.quantity ?? 0;
+    setQuantity((prev) => (prev = item?.quantity ?? 0));
   }, [order, product._id]);
 
   const addMutation = useAddProduct(user!._id);
