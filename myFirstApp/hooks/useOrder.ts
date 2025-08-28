@@ -44,3 +44,12 @@ export const useDecreaseProduct = (userId: string) => {
       queryClient.invalidateQueries({ queryKey: ["order", userId] }),
   });
 };
+
+export const useClearOrder = (userId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => orderService.clearOrder(userId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["order", userId] }),
+  });
+};

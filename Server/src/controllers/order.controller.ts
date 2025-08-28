@@ -135,10 +135,8 @@ export const orderController = {
     return res.status(404).json({ success: true, message: "Error!" });
   },
   clearOrder: async (req: Request, res: Response) => {
-    const { userId }: { userId: string } = req.body;
+    const userId = req.params.id;
     const user = await UserModel.findById(userId);
-    console.log(user);
-
     if (!user) {
       return res
         .status(404)
@@ -170,7 +168,6 @@ export const orderController = {
   },
   getOrder: async (req: Request, res: Response) => {
     const userId = req.params.id;
-
     const user = await UserModel.findById(userId);
 
     if (!user) {
@@ -179,15 +176,23 @@ export const orderController = {
         .json({ success: false, message: "User order not Found!" });
     }
 
-    let order = await OrderModel.findOne({ userId });
+    let order = await OrderModel.findOne({ userId })
+      .populate({
+        path: "items.product",
+        select: "title price image",
+        strictPopulate: false,
+      })
+      .exec();
+
     if (!order) {
       res.status(404).json({ success: false, message: "No order found" });
       return;
     }
     // get user order
-    console.log(order);
-    return res
-      .status(202)
-      .json({ success: true, message: "User order!:", order });
+    return res.status(202).json({
+      success: true,
+      message: "User order!:",
+      data: order,
+    });
   },
 };

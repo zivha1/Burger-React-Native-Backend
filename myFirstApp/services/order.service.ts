@@ -23,4 +23,8 @@ export const orderService = {
     const res = await api.patch("/order/item", { productId, userId });
     return res.data.data;
   },
+  async clearOrder(userId: string): Promise<any> {
+    const res = await api.delete<{ success: boolean }>(`/order/${userId}`);
+    return res.data;
+  },
 };

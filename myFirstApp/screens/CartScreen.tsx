@@ -17,6 +17,7 @@ import {
   useRemoveProduct,
   useAddProduct,
   useDecreaseProduct,
+  useClearOrder,
 } from "@/hooks/useOrder";
 import { useAuth } from "@/context/authContext";
 
@@ -36,6 +37,7 @@ export default function CartScreen({ navigation }: { navigation: CartProp }) {
   const { mutate: removeOne, isPending: removing } = useRemoveProduct(userId!);
   const { mutate: addOne, isPending: adding } = useAddProduct(userId!);
   const { mutate: decOne, isPending: decing } = useDecreaseProduct(userId!);
+  const { mutate: clearAll, isPending: clearing } = useClearOrder(userId!);
 
   const items = order?.items ?? [];
 
@@ -111,10 +113,10 @@ export default function CartScreen({ navigation }: { navigation: CartProp }) {
           </View>
         </View>
 
-        <Pressable onPress={() => refetch()} style={styles.refresh}>
-          <Ionicons name="refresh" size={18} color="#111827" />
+        <Pressable onPress={() => clearAll()} style={styles.refresh}>
+          <Ionicons name="trash" size={18} color="#ff1515ff" />
           <Text style={styles.refreshText}>
-            {isFetching ? "Refreshing…" : "Refresh"}
+            {clearing ? "Canceling order..." : "Cancel Order"}
           </Text>
         </Pressable>
       </View>
@@ -196,10 +198,7 @@ export default function CartScreen({ navigation }: { navigation: CartProp }) {
         </View>
         <Pressable
           style={[styles.btn, styles.btnPrimary, styles.checkoutBtn]}
-          onPress={() => {
-            // TODO: navigate to Checkout screen
-            // navigation.navigate("Checkout" as any);
-          }}
+          onPress={() => {}}
         >
           <Text style={styles.btnTextPrimary}>Checkout ({totalQty})</Text>
         </Pressable>
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
   qtyBadgeText: { color: "white", fontWeight: "700", fontSize: 12 },
 
   refresh: { flexDirection: "row", alignItems: "center", gap: 6, padding: 6 },
-  refreshText: { color: "#111827", fontWeight: "600" },
+  refreshText: { color: "#ff0000ff", fontWeight: "600" },
 
   card: {
     backgroundColor: "white",
