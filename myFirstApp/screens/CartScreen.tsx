@@ -72,6 +72,7 @@ export default function CartScreen({ navigation }: { navigation: CartProp }) {
     return (
       <SafeAreaView style={[styles.container, { justifyContent: "center" }]}>
         <Text style={styles.title}>Couldn’t load your cart</Text>
+        <Text style={styles.cardTitle}>Try adding product to your cart</Text>
         <Pressable
           style={[styles.btn, styles.btnPrimary]}
           onPress={() => refetch()}
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E5E7EB",
   },
   cardInfo: { flex: 1 },
-  cardTitle: { fontSize: 16, fontWeight: "700", color: "#111827" },
+  cardTitle: { fontSize: 16, fontWeight: "700", color: "#111827", marginTop:2, marginBottom:2 },
   cardSubtitle: { fontSize: 14, color: "#374151", marginTop: 2 },
 
   rowBetween: {
