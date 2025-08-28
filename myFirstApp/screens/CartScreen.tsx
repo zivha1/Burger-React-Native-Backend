@@ -94,7 +94,7 @@ export default function CartScreen({ navigation }: { navigation: CartProp }) {
         </Text>
         <Pressable
           style={[styles.btn, styles.btnPrimary, { marginTop: 16 }]}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("Products")}
         >
           <Text style={styles.btnTextPrimary}>Continue shopping</Text>
         </Pressable>
