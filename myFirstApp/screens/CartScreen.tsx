@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     marginBottom: 2,
   },
+  cardTitle: { fontSize: 16, fontWeight: "700", color: "#111827", marginTop:2, marginBottom:2 },
   cardSubtitle: { fontSize: 14, color: "#374151", marginTop: 2 },
 
   rowBetween: {
