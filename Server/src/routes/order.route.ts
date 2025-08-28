@@ -5,6 +5,9 @@ import { requireAuth } from "../middleware/authMiddleware";
 const router = express.Router();
 
 router.post("/", orderController.addToOrder);
-router.get("/", orderController.getUser);
+router.patch("/item", orderController.decreaseFromOrder);
+router.post("/item", orderController.removeFromOrder);
+router.delete("/:id", orderController.clearOrder);
+router.get("/:id", orderController.getOrder);
 
 export default router;

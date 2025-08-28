@@ -1,7 +1,13 @@
 import { LoginRequest, RegisterRequest } from "@/types/auth";
 import { User } from "@/types/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { authService } from "@/services/auth.service";
 
 interface AuthContextType {
@@ -9,8 +15,12 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
-  login: (credentials: LoginRequest) => Promise<{ success: boolean; error?: string }>;
-  register: (credentials: RegisterRequest) => Promise<{ success: boolean; error?: string }>;
+  login: (
+    credentials: LoginRequest
+  ) => Promise<{ success: boolean; error?: string }>;
+  register: (
+    credentials: RegisterRequest
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -25,7 +35,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   const isAuthenticated = !!user;
-  console.log(user?.role);
   const isAdmin = user?.role === "admin";
 
   useEffect(() => {
@@ -50,7 +59,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const login = async (credentials: LoginRequest): Promise<{ success: boolean; error?: string }> => {
+  const login = async (
+    credentials: LoginRequest
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await authService.login(credentials);
 
@@ -79,7 +90,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const register = async (credentials: RegisterRequest): Promise<{ success: boolean; error?: string }> => {
+  const register = async (
+    credentials: RegisterRequest
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await authService.register(credentials);
 
@@ -94,7 +107,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(userData);
         return { success: true };
       }
-      return { success: false, error: response.message || "Registration failed" };
+      return {
+        success: false,
+        error: response.message || "Registration failed",
+      };
     } catch (error: any) {
       console.error("Registration error:", error);
       // Extract error message from axios error response
@@ -110,7 +126,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = async (): Promise<void> => {
     try {
-      await Promise.all([AsyncStorage.removeItem("authToken"), AsyncStorage.removeItem("user")]);
+      await Promise.all([
+        AsyncStorage.removeItem("authToken"),
+        AsyncStorage.removeItem("user"),
+      ]);
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);

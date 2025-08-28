@@ -18,7 +18,7 @@ import {
 } from "@/hooks/useProducts";
 import { Ionicons } from "@expo/vector-icons";
 import { Product } from "@/types/product";
-import { ProductModal } from "@/components/modals/ProductModal";
+import { ProductModalUpseart } from "@/components/modals/ProductModalUpseart";
 
 const { width } = Dimensions.get("window");
 
@@ -189,7 +189,7 @@ export const AdminMenuScreen = () => {
         columnWrapperStyle={styles.row}
       />
 
-      <ProductModal
+      <ProductModalUpseart
         visible={modalVisible}
         onClose={closeModal}
         onSubmit={handleModalSubmit}

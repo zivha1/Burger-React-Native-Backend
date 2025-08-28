@@ -1,4 +1,4 @@
-import mongoose, { Schema, SchemaType } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IOrder } from "../types/order";
 
 const orderSchema = new mongoose.Schema<IOrder>(
@@ -10,11 +10,12 @@ const orderSchema = new mongoose.Schema<IOrder>(
           ref: "Product",
           required: true,
         },
-        productSum: Number,
         quantity: Number,
+        productSum: Number,
       },
     ],
-    total: Number,
+    totalQuantity: Number,
+    totalPrice: Number,
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   {
